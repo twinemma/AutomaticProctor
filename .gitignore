@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.DS_Store
+
+object_detection/data
+object_detection/models
+object_detection/workspace/training_demo/annotations/*.record
+object_detection/workspace/training_demo/models
+object_detection/workspace/training_demo/pre-trained-models
