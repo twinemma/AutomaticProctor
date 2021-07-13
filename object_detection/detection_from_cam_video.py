@@ -38,7 +38,7 @@ def load_graph(trained_model):
   detection_graph : Tensorflow Graph representing the trained model
   """
 
-  frozen_model = trained_model + '/frozen_inference_graph.pb'
+  frozen_model = os.path.join(MODELS_DIR, trained_model) + '/frozen_inference_graph.pb'
   with tf.compat.v2.io.gfile.GFile(frozen_model, 'rb') as fid:
     od_graph_def = tf.compat.v1.GraphDef()
     serialized_graph = fid.read()
@@ -98,7 +98,7 @@ def download_model_if_not_exists(trained_model):
     path_to_model_tar = os.path.join(MODELS_DIR, model_file)
     opener = urllib.request.URLopener()
     opener.retrieve(DOWNLOAD_BASE + model_file, path_to_model_tar)
-    tar_file = tarfile.open(model_file)
+    tar_file = tarfile.open(path_to_model_tar)
     for file in tar_file.getmembers():
       file_name = os.path.basename(file.name)
       if 'frozen_inference_graph.pb' in file_name:
