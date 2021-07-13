@@ -1,0 +1,26 @@
+<annotation>
+	<folder>images</folder>
+	<filename>openbook-39.jpeg</filename>
+	<path>/Users/frankli/ScienceFair/AutomaticProctor/object_detection/workspace/training_demo/images/openbook-39.jpeg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>2951</width>
+		<height>1960</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Open Book</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>147</xmin>
+			<ymin>1174</ymin>
+			<xmax>2929</xmax>
+			<ymax>1781</ymax>
+		</bndbox>
+	</object>
+</annotation>
