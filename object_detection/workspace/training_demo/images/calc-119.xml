@@ -1,0 +1,26 @@
+<annotation>
+	<folder>images</folder>
+	<filename>calc-119.jpeg</filename>
+	<path>/Users/frankli/ScienceFair/AutomaticProctor/object_detection/workspace/training_demo/images/calc-119.jpeg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>617</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Calculator</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>45</xmin>
+			<ymin>168</ymin>
+			<xmax>775</xmax>
+			<ymax>617</ymax>
+		</bndbox>
+	</object>
+</annotation>
