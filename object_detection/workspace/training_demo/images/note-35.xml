@@ -1,0 +1,26 @@
+<annotation>
+	<folder>images</folder>
+	<filename>note-35.png</filename>
+	<path>/Users/frankli/ScienceFair/AutomaticProctor/object_detection/workspace/training_demo/images/note-35.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>475</width>
+		<height>250</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Note</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>123</xmin>
+			<ymin>171</ymin>
+			<xmax>171</xmax>
+			<ymax>221</ymax>
+		</bndbox>
+	</object>
+</annotation>
