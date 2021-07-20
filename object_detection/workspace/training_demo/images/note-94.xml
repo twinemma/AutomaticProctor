@@ -1,0 +1,26 @@
+<annotation>
+	<folder>images</folder>
+	<filename>note-94.webp</filename>
+	<path>/Users/frankli/ScienceFair/AutomaticProctor/object_detection/workspace/training_demo/images/note-94.webp</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>410</width>
+		<height>205</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Note</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>142</xmin>
+			<ymin>92</ymin>
+			<xmax>253</xmax>
+			<ymax>163</ymax>
+		</bndbox>
+	</object>
+</annotation>
