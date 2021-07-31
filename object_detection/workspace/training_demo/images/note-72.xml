@@ -1,7 +1,7 @@
 <annotation>
 	<folder>images</folder>
-	<filename>note-72.webp</filename>
-	<path>/Users/frankli/ScienceFair/AutomaticProctor/object_detection/workspace/training_demo/images/note-72.webp</path>
+	<filename>note-72.jpg</filename>
+	<path>/Users/frankli/ScienceFair/AutomaticProctor/object_detection/workspace/training_demo/images/note-72.jpg</path>
 	<source>
 		<database>Unknown</database>
 	</source>
@@ -17,9 +17,9 @@
 		<truncated>0</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>1004</xmin>
+			<xmin>1002</xmin>
 			<ymin>572</ymin>
-			<xmax>1215</xmax>
+			<xmax>1213</xmax>
 			<ymax>738</ymax>
 		</bndbox>
 	</object>
