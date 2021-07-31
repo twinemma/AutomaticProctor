@@ -10,7 +10,7 @@ item {
 
 item {
   id: 3
-  name: 'Notes'
+  name: 'Note'
 }
 
 item {
