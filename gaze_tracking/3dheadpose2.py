@@ -4,6 +4,7 @@ import math
 import serial
 from face_detector import get_face_detector, find_faces
 from face_landmarks import get_landmark_model, detect_marks
+import time
 
 def get_2d_points(img, rotation_vector, translation_vector, camera_matrix, val):
     """Return the 3D points present as 2D for making annotation box"""
@@ -182,7 +183,7 @@ def relativeRotation(R_ca, R_cb) :
     """
     #print("Comparing before {} and after {}".format(R_ca, R_cb))
     R_ac = np.transpose(R_ca)
-    print("Rotation {}".format(R_ac))
+    #print("Rotation {}".format(R_ac))
     return np.dot(R_ac, R_cb)
 
 #os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'    # Suppress TensorFlow logging
@@ -218,6 +219,9 @@ camera_matrix = np.array(
 
 prev_rotation = np.zeros((3, 3))
 initialized = False
+ts = time.time()
+totalY = 0
+totalX = 0
 while True:
     ret, img = cap.read()
     if ret == True:
@@ -254,10 +258,16 @@ while True:
                     print("Ignore invalid relative rotation matrix in the frame of previous pos {}".format(relative_rotation))
                     continue
                 [theta_x, theta_y, theta_z] = rotationMatrixToEulerAngles(relative_rotation)
-                #[theta_x, theta_y, theta_z] = yawpitchrolldecomposition(relative_rotation)
-                #ser.write(str.encode("0," + str(theta_y) + "," + str(theta_x) + ";"))
-                #print("Relative rotation euler angles are ({}, {}, {})".format(theta_x, theta_y, theta_z))
-                print("sending eye movement: " + "0," + str(theta_y) + "," + str(theta_x) + ";")
+                totalX += theta_x
+                totalY += theta_y
+                if time.time() - ts >= 5:
+                    #[theta_x, theta_y, theta_z] = yawpitchrolldecomposition(relative_rotation)
+                    #ser.write(str.encode("0," + str(totalY) + "," + str(totalX) + ";"))
+                    #print("Relative rotation euler angles are ({}, {}, {})".format(theta_x, theta_y, theta_z))
+                    print("sending eye movement: " + "0," + str(totalY) + "," + str(totalX) + ";")
+                    ts = time.time()
+                    totalX = 0
+                    totalY = 0
                 prev_rotation = rmat
 
             # Project a 3D point (0, 0, 1000.0) onto the image plane.
