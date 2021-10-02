@@ -53,7 +53,7 @@ import urllib.request
 
 # Download and extract model
 MODEL_DATE = '20200711'
-MODEL_NAME = 'ssd_mobilenet_v2_320x320_coco17_tpu-8'
+MODEL_NAME = 'custom_ssd_mobilenet_v2_320x320'
 #MODEL_NAME = 'ssd_resnet101_v1_fpn_640x640_coco17_tpu-8'
 #MODEL_NAME = 'my_tf2_ssd_mobilenet_v2'
 MODEL_TAR_FILENAME = MODEL_NAME + '.tar.gz'
@@ -72,8 +72,8 @@ if not os.path.exists(PATH_TO_CKPT):
     print('Done')
 
 # Download labels file
-LABEL_FILENAME = 'mscoco_label_map.pbtxt'
-#LABEL_FILENAME = 'label_map.pbtxt'
+#LABEL_FILENAME = 'mscoco_label_map.pbtxt'
+LABEL_FILENAME = 'label_map.pbtxt'
 LABELS_DOWNLOAD_BASE = \
     'https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/data/'
 PATH_TO_LABELS = os.path.join(MODELS_DIR, os.path.join(MODEL_NAME, LABEL_FILENAME))
