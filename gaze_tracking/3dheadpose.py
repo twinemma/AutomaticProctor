@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 import math
-#import serial
+import serial
 from face_detector import get_face_detector, find_faces
-from face_landmarks import get_landmark_model, detect_marks
+from face_landmarks import get_landmark_model, detect_marks, draw_marks
 
 
 def isRotationMatrix(R) :
@@ -56,7 +56,7 @@ def eulerAngleFromRotTrans(rotation_mat, translation_vec):
     pose_mat = cv2.hconcat((rotation_mat, translation_vec))
     _, _, _, _, _, _, euler_angles = cv2.decomposeProjectionMatrix(pose_mat)
     return (rotation_mat, euler_angles)
-       
+
 
 def relativeRotation(R_ca, R_cb) :
     """
@@ -88,7 +88,6 @@ ret, img = cap.read()
 size = img.shape
 font = cv2.FONT_HERSHEY_SIMPLEX 
 #ser = serial.Serial('/dev/cu.usbmodem14101', 115200)
-
 # 3D model points.
 model_points = np.array([
                             (0.0, 0.0, 0.0),             # Nose tip
@@ -99,9 +98,10 @@ model_points = np.array([
                             (150.0, -150.0, -125.0)      # Right mouth corner
                         ])
 
-# Camera internals
+#Camera internals
 focal_length = size[1]
 center = (size[1]/2, size[0]/2)
+print("camera info: center = {}, focal_length={}".format(center, focal_length))
 camera_matrix = np.array(
                          [[focal_length, 0, center[0]],
                          [0, focal_length, center[1]],
@@ -110,17 +110,20 @@ camera_matrix = np.array(
 
 prev_rotation = np.zeros((3, 3))
 prev_translation = np.zeros((3, 1))
+prev_euler_angle = np.zeros((3, 1))
 initialized = False
+
 
 start_pos = False
 end_pos = False
 while True:
     ret, img = cap.read()
+    size = img.shape
     if ret == True:
         faces = find_faces(img, face_model)
         for face in faces:
             marks = detect_marks(img, landmark_model, face)
-            # mark_detector.draw_marks(img, marks, color=(0, 255, 0))
+            draw_marks(img, marks, color=(0, 255, 0))
             image_points = np.array([
                                     marks[30],     # Nose tip
                                     marks[8],     # Chin
@@ -129,27 +132,40 @@ while True:
                                     marks[48],     # Left Mouth corner
                                     marks[54]      # Right mouth corner
                                 ], dtype="double")
-            dist_coeffs = np.zeros((4,1)) # Assuming no lens distortion
-            (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix, dist_coeffs, flags=cv2.SOLVEPNP_UPNP)
+            dist_coeffs = np.zeros((4,1), dtype="double") # Assuming no lens distortion
+            # This is crucial. We need to use cv2.SOLVEPNP_ITERATIVE to minimize the reprojection error to get more accurate relative rotation angle.
+            # Previous cv2.SOLVEPNP_UPNP does not work well for nose tip projection.
+            #(success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix, dist_coeffs, flags=cv2.SOLVEPNP_UPNP)
+            (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix, dist_coeffs, flags=cv2.SOLVEPNP_ITERATIVE)
+ 
+            # reproject 6 face points to verify the accuracy of the solvePnP algorithm            
+            (reproj_image_points, jacobian) = cv2.projectPoints(model_points, rotation_vector, translation_vector, camera_matrix, dist_coeffs)
 
-            
-            # Project a 3D point (0, 0, 1000.0) onto the image plane.
+            # Project 3 axis onto the image plane.
             # We use this to draw a line sticking out of the nose            
-            (nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, 1000.0)]), rotation_vector, translation_vector, camera_matrix, dist_coeffs)
+            (nose_end_point2D_x, jacobian) = cv2.projectPoints(np.array([(500.0, 0.0, 0.0)]), rotation_vector, translation_vector, camera_matrix, dist_coeffs)
+            (nose_end_point2D_y, jacobian) = cv2.projectPoints(np.array([(0.0, 500.0, 0.0)]), rotation_vector, translation_vector, camera_matrix, dist_coeffs)
+            (nose_end_point2D_z, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, 500.0)]), rotation_vector, translation_vector, camera_matrix, dist_coeffs)
             
-            for p in image_points:
-                cv2.circle(img, (int(p[0]), int(p[1])), 3, (0,0,255), -1)
+            
+            # for p in image_points:
+            #     cv2.circle(img, (int(p[0]), int(p[1])), 3, (0,0,255), -1)
+
+            for p in reproj_image_points:
+                cv2.circle(img, (int(p[0][0]), int(p[0][1])), 3, (255,0,0), -1)
             
             
             p1 = ( int(image_points[0][0]), int(image_points[0][1]))
-            p2 = ( int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
+            px = ( int(nose_end_point2D_x[0][0][0]), int(nose_end_point2D_x[0][0][1]))
+            py = ( int(nose_end_point2D_y[0][0][0]), int(nose_end_point2D_y[0][0][1]))
+            pz = ( int(nose_end_point2D_z[0][0][0]), int(nose_end_point2D_z[0][0][1]))
 
-            cv2.line(img, p1, p2, (0, 255, 255), 2)
-            # Calculate euler angle
+            # opencv color is defined as BGR
+            cv2.line(img, p1, px, (255, 0, 0), 2)  #blue 
+            cv2.line(img, p1, py, (0, 255, 0), 2)  #green
+            cv2.line(img, p1, pz, (0, 0, 255), 2)  #red
+
             (rmat, euler_angles) = eulerAngleFromPnP(rotation_vector, translation_vector)
-            # print("Translation vector: {}".format(translation_vector))
-            # print("Rotation matrix: {}".format(rmat))
-            # print("Euler angles: {}".format(euler_angles))
             # calculate relative rotation and translation relative to previous frame
             if not isRotationMatrix(rmat):
                 print("ignore an invalid rotation matrix {} from solvePnP after cv2.Rodrigues".format(rmat))
@@ -172,11 +188,9 @@ while True:
                     print("Ignore invalid relative rotation matrix in the frame of previous pos {}".format(relative_rotation))
                     continue
                 my_relative_euler = rotationMatrixToEulerAngles(relative_rotation)
+                print("My relative rotation euler angle: {}".format(my_relative_euler))
                 #[theta_x, theta_y, theta_z] = rotationMatrixToEulerAngles(relative_rotation)
-                (_, relative_euler) = eulerAngleFromRotTrans(relative_rotation, relative_translation)
                 #ser.write(str.encode("0," + str(theta_y) + "," + str(theta_x) + ";"))
-                print("Relative rotation euler angles: {}".format(relative_euler))
-                #print("sending eye movement: " + "0," + str(theta_y) + "," + str(theta_x) + ";")
                 prev_rotation = rmat
                 prev_translation = translation_vector
                 end_pos = False
@@ -195,3 +209,4 @@ while True:
         break
 cv2.destroyAllWindows()
 cap.release()
+
