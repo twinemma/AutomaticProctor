@@ -144,7 +144,7 @@ while True:
                 ts = time.time()
                 continue
 
-            if time.time() - ts >= 5:
+            if time.time() - ts >= 0:
                 print("Start position rotation matrix {}".format(prev_rotation))
                 print("End position rotation matrix {}".format(rmat))
                 #[theta_x, theta_y, theta_z] = yawpitchrolldecomposition(relative_rotation)

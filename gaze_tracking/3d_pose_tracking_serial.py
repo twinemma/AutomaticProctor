@@ -78,7 +78,7 @@ def relativeRotation(R_ca, R_cb) :
     R_ac = np.transpose(R_ca)
     return np.dot(R_ac, R_cb)
 
-def overThreshold(theta_x, theta_y, threshold) :
+def withinThreshold(theta_x, theta_y, lb, ub) :
     """
     Check if absolute value of either angle is bigger than the given threshold
     -----------
@@ -89,7 +89,7 @@ def overThreshold(theta_x, theta_y, threshold) :
     --------
     true if either of angle is equal or bigger than the given the threshold
     """
-    return abs(theta_x) >= threshold or abs(theta_y) >= threshold
+    return (abs(theta_x) >= lb or abs(theta_y) >= lb) and (abs(theta_x) <= ub and abs(theta_y) <= ub)
 
 #os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'    # Suppress TensorFlow logging
 import tensorflow as tf
@@ -124,7 +124,8 @@ camera_matrix = np.array(
 
 prev_rotation = np.zeros((3, 3))
 initialized = False
-threshold = 3
+lb = 3 #lower bound
+ub = 40 #upper bound
 while True:
     ret, img = cap.read()
     if ret == True:
@@ -184,7 +185,7 @@ while True:
                 print("Ignore invalid relative rotation matrix in the frame of previous pos {}".format(relative_rotation))
                 continue
             [theta_x, theta_y, theta_z] = rotationMatrixToEulerAngles(relative_rotation)
-            if (overThreshold(theta_x, theta_y, threshold)):
+            if (withinThreshold(theta_x, theta_y, lb, ub)):
                 print("Sending serial command:  0, {}, {}".format(theta_y, theta_x))
                 ser.write(str.encode("0," + str(theta_y) + "," + str(theta_x) + ";"))
                 # update prev_rotation with current rotation, ready for next iteration
