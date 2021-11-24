@@ -1,0 +1,50 @@
+<annotation>
+	<folder>TrainingImages</folder>
+	<filename>IMG_1898.jpeg</filename>
+	<path>/Users/frankli/ScienceFair/AutomaticProctor/object_detection/workspace/training_demo/images/TrainingImages/IMG_1898.jpeg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>3024</width>
+		<height>4032</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Cell Phone</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>608</xmin>
+			<ymin>2147</ymin>
+			<xmax>1001</xmax>
+			<ymax>2747</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>Cell Phone</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1365</xmin>
+			<ymin>2033</ymin>
+			<xmax>1972</xmax>
+			<ymax>2590</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>Cell Phone</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>2015</xmin>
+			<ymin>1740</ymin>
+			<xmax>2765</xmax>
+			<ymax>2247</ymax>
+		</bndbox>
+	</object>
+</annotation>
