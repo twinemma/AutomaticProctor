@@ -55,11 +55,14 @@ def visualize_boxes_and_labels_on_image_array_by_config(
   """ This is a revised version of visualize_boxes_and_labels_on_image_array
   from visualization_utils.py of object_detection.utils. This version will not
   display those detected boxes if the object class is not in category_index map.
+
   Overlay labeled boxes on an image with formatted scores and label names.
+
   This function groups boxes that correspond to the same location
   and creates a display string for each detection and overlays these
   on the image. Note that this function modifies the image in place, and returns
   that same image.
+
   Args:
     image: uint8 numpy array with shape (img_height, img_width, 3)
     boxes: a numpy array of shape [N, 4]
@@ -100,8 +103,10 @@ def visualize_boxes_and_labels_on_image_array_by_config(
     skip_scores: whether to skip score when drawing a single detection
     skip_labels: whether to skip label when drawing a single detection
     skip_track_ids: whether to skip track id when drawing a single detection
+
   Returns:
     list of classes of objects whose bounding boxes are displayed
+
     The incoming image array is updated with overlaid boxes.
   """
   # Create a display string (and color) for every box location, group any boxes
