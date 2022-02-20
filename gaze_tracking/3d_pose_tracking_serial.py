@@ -101,7 +101,7 @@ cap = cv2.VideoCapture(0)
 ret, img = cap.read()
 size = img.shape
 font = cv2.FONT_HERSHEY_SIMPLEX 
-ser = serial.Serial('/dev/cu.usbmodem14101', 115200)
+#ser = serial.Serial('/dev/cu.usbmodem14101', 115200)
 # 3D model points.
 model_points = np.array([
                             (0.0, 0.0, 0.0),             # Nose tip
@@ -161,9 +161,9 @@ while True:
             pz = ( int(nose_end_point2D_z[0][0][0]), int(nose_end_point2D_z[0][0][1]))
 
             # opencv color is defined as BGR
-            cv2.line(img, p1, px, (255, 0, 0), 2)  #blue 
-            cv2.line(img, p1, py, (0, 255, 0), 2)  #green
-            cv2.line(img, p1, pz, (0, 0, 255), 2)  #red
+            #cv2.line(img, p1, px, (255, 0, 0), 2)  #blue 
+            #cv2.line(img, p1, py, (0, 255, 0), 2)  #green
+            #cv2.line(img, p1, pz, (0, 0, 255), 2)  #red
 
 
            
