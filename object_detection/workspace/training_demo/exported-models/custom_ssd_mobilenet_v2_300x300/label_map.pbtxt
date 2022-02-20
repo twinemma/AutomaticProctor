@@ -1,0 +1,19 @@
+item {
+  id: 1
+  name: 'Calculator'
+}
+
+item {
+  id: 2
+  name: 'Cell Phone'
+}
+
+item {
+  id: 3
+  name: 'Note'
+}
+
+item {
+  id: 4
+  name: 'Open Book'
+}
