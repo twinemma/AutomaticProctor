@@ -78,8 +78,9 @@ for item in chosen_target_index:
     chosen_category_index[item] = category_index[item]
 print("You have chosen these cheating targets: {}".format(chosen_target_name))
 print("Configured category index: {}".format(chosen_category_index))
-cheating_duration = int(input("Please enter cheating duration threshold in seconds: "))
-print("You have configued cheating duration threshold as {} seconds".format(cheating_duration))
+#cheating_duration = int(input("Please enter cheating duration threshold in seconds: "))
+cheating_duration = 3
+#print("You have configued cheating duration threshold as {} seconds".format(cheating_duration))
 
 
 ############################################################################
@@ -163,10 +164,10 @@ while True:
           chosen_category_index,
           use_normalized_coordinates=True,
           max_boxes_to_draw=200,
-          min_score_thresh=.50,
+          min_score_thresh=.70,
           agnostic_mode=False)
     # Display output
-    displayed_image = cv2.resize(image_np_with_detections, (800, 600))
+    displayed_image = cv2.resize(image_np_with_detections, (800, 450))
     cv2.imshow('object detection', displayed_image)
 
     for target_class in detected_target_classes:
@@ -195,10 +196,10 @@ while True:
             # initialize its timer
             cheating_target_timer_map[target_class] = datetime.datetime.now()
             # start video recording
-            video_name = "cheating_" + format_datetime(datetime.datetime.now(), '%Y_%m_%d_%H_%M_%S')
-            video_writer = create_video_writer(video_name)
-            cheating_target_video_writer_map[target_class] = video_writer
-            video_writer.write(displayed_image)
+            #video_name = "cheating_" + format_datetime(datetime.datetime.now(), '%Y_%m_%d_%H_%M_%S')
+            #video_writer = create_video_writer(video_name)
+            #cheating_target_video_writer_map[target_class] = video_writer
+            #video_writer.write(displayed_image)
 
 
     if cv2.waitKey(25) & 0xFF == ord('q'):

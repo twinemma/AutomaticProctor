@@ -101,7 +101,7 @@ cap = cv2.VideoCapture(0)
 ret, img = cap.read()
 size = img.shape
 font = cv2.FONT_HERSHEY_SIMPLEX 
-#ser = serial.Serial('/dev/cu.usbmodem14101', 115200)
+ser = serial.Serial('/dev/cu.usbmodem14101', 115200)
 # 3D model points.
 model_points = np.array([
                             (0.0, 0.0, 0.0),             # Nose tip
