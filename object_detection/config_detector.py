@@ -6,7 +6,6 @@ from object_detection.utils import label_map_util
 from object_detection.utils import config_util
 from object_detection.builders import model_builder
 
-
 ############################################################################
 # Initialization Phase:                                                    #
 #    Load custom-trained model and build in-memory object detection model  #
@@ -81,7 +80,7 @@ print("Configured category index: {}".format(chosen_category_index))
 #cheating_duration = int(input("Please enter cheating duration threshold in seconds: "))
 cheating_duration = 3
 #print("You have configued cheating duration threshold as {} seconds".format(cheating_duration))
-
+video_audit = False
 
 ############################################################################
 # Detection Phase:                                                         #
@@ -99,8 +98,8 @@ from urllib.request import urlopen
 import cv2
 
 # uncomment below if we are reading from ESP2 camera
-# ESP_URL="http://192.168.1.21/cam-hi.jpg"
-cap = cv2.VideoCapture(0)
+ESP_URL="http://192.168.1.17/cam-hi.jpg"
+#cap = cv2.VideoCapture(0)
 
 
 @tf.function
@@ -135,17 +134,18 @@ import datetime
 # timer set for each class of configured cheating targets
 cheating_target_timer_map = {}
 # video writer for each class of configured cheating targets for the specified duration window
-cheating_target_video_writer_map = {}
+if video_audit: 
+    cheating_target_video_writer_map = {}
 while True:
     # Uncomment below if we are reading from ESP2 camera
     # open this URL to trigger ESP32 camera to take an image frame
-    # imgResp=urllib.request.urlopen(ESP_URL)
-    # imgNp=np.array(bytearray(imgResp.read()),dtype=np.uint8)
-    # image_np=cv2.imdecode(imgNp,-1)
-    # image_np=cv2.resize(image_np,(640,480))
+    imgResp=urlopen(ESP_URL)
+    imgNp=np.array(bytearray(imgResp.read()),dtype=np.uint8)
+    image_np=cv2.imdecode(imgNp,-1)
+    image_np=cv2.resize(image_np,(640,480))
 
     # Read frame from camera
-    ret, image_np = cap.read()
+    #ret, image_np = cap.read()
 
     # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
     image_np_expanded = np.expand_dims(image_np, axis=0)
@@ -176,8 +176,9 @@ while True:
             cheating_start = cheating_target_timer_map[target_class]
             cheating_end = datetime.datetime.now()
             cheating_delta = cheating_end - cheating_start
-            # record the video
-            cheating_target_video_writer_map[target_class].write(displayed_image)
+            if video_audit:
+                # record the video
+                cheating_target_video_writer_map[target_class].write(displayed_image)
             if cheating_delta.seconds > cheating_duration:
                 # this class of target has been detected for pre-configured duration threshold
                 print("Potential cheating using {} from duration ({}, {})"
@@ -186,24 +187,27 @@ while True:
                         default_format_datetime(cheating_end)))
                 cv2.putText(image_np_with_detections, 'Potential Cheating', (30, 50), 
                     cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 3)
-                # stop recording
-                cheating_target_video_writer_map[target_class].release()
+                if video_audit:
+                    # stop recording
+                    cheating_target_video_writer_map[target_class].release()
                 # reset its timer and video writer
                 del cheating_target_timer_map[target_class]
-                del cheating_target_video_writer_map[target_class]
+                if video_audit:
+                    del cheating_target_video_writer_map[target_class]
         else:
             # first time detecting this class since last time window,
             # initialize its timer
             cheating_target_timer_map[target_class] = datetime.datetime.now()
-            # start video recording
-            #video_name = "cheating_" + format_datetime(datetime.datetime.now(), '%Y_%m_%d_%H_%M_%S')
-            #video_writer = create_video_writer(video_name)
-            #cheating_target_video_writer_map[target_class] = video_writer
-            #video_writer.write(displayed_image)
+            if video_audit:
+                # start video recording
+                video_name = "cheating_" + format_datetime(datetime.datetime.now(), '%Y_%m_%d_%H_%M_%S')
+                video_writer = create_video_writer(video_name)
+                cheating_target_video_writer_map[target_class] = video_writer
+                video_writer.write(displayed_image)
 
 
     if cv2.waitKey(25) & 0xFF == ord('q'):
         break
 
-cap.release()
+#cap.release()
 cv2.destroyAllWindows()
