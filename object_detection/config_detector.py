@@ -1,3 +1,11 @@
+#***********************************************************************************
+#
+# Copyright 2022 Brian Li and Emma Li. All rights reserved.
+#
+# Configurable Cheating Classification through custom trained object detection model
+#
+#************************************************************************************/
+
 import os
 import sys
 
@@ -97,8 +105,8 @@ video_audit = False
 from urllib.request import urlopen
 import cv2
 
-# uncomment below if we are reading from ESP2 camera
-ESP_URL="http://192.168.1.17/cam-hi.jpg"
+# uncomment below if we are reading from ESP32 camera
+ESP_URL="http://192.168.1.5/cam-hi.jpg"
 #cap = cv2.VideoCapture(0)
 
 
@@ -143,6 +151,7 @@ while True:
     imgNp=np.array(bytearray(imgResp.read()),dtype=np.uint8)
     image_np=cv2.imdecode(imgNp,-1)
     image_np=cv2.resize(image_np,(640,480))
+    # image_np=cv2.resize(image_np,(960,720))
 
     # Read frame from camera
     #ret, image_np = cap.read()
@@ -164,7 +173,7 @@ while True:
           chosen_category_index,
           use_normalized_coordinates=True,
           max_boxes_to_draw=200,
-          min_score_thresh=.70,
+          min_score_thresh=.50,
           agnostic_mode=False)
     # Display output
     displayed_image = cv2.resize(image_np_with_detections, (800, 450))

@@ -1,3 +1,10 @@
+#***********************************************************************************
+#
+# Copyright 2022 Brian Li and Emma Li. All rights reserved.
+#
+# Revised version of visualization_utils from object_detection.utils
+#
+#************************************************************************************/
 import collections
 import six
 from object_detection.utils import visualization_utils as viz_utils
