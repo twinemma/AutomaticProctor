@@ -1,3 +1,10 @@
+#***********************************************************/
+#
+# Copyright 2022 Emma Li and Brian Li. All rights reserved.
+#
+# 3D Gaze Motion Tracking
+#**********************************************************/
+
 import cv2
 import numpy as np
 import math
@@ -101,7 +108,7 @@ cap = cv2.VideoCapture(0)
 ret, img = cap.read()
 size = img.shape
 font = cv2.FONT_HERSHEY_SIMPLEX 
-ser = serial.Serial('/dev/cu.usbmodem14101', 115200)
+#ser = serial.Serial('/dev/cu.usbmodem14101', 115200)
 # 3D model points.
 model_points = np.array([
                             (0.0, 0.0, 0.0),             # Nose tip
@@ -187,7 +194,7 @@ while True:
             [theta_x, theta_y, theta_z] = rotationMatrixToEulerAngles(relative_rotation)
             if (withinThreshold(theta_x, theta_y, lb, ub)):
                 print("Sending serial command:  0, {}, {}".format(theta_y, theta_x))
-                ser.write(str.encode("0," + str(theta_y) + "," + str(theta_x) + ";"))
+                #ser.write(str.encode("0," + str(theta_y) + "," + str(theta_x) + ";"))
                 # update prev_rotation with current rotation, ready for next iteration
                 prev_rotation = rmat;
  

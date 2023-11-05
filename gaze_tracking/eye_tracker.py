@@ -3,7 +3,7 @@
 #
 # Copyright 2021 Emma Li and Brian Li. All rights reserved.
 #
-#
+# Gaze view tracking approximated through 2D gaze estimation
 #**********************************************************/
 
 import cv2
